@@ -24,7 +24,7 @@
     "appId": "com.my.app.id",
     "publish": {
       "provider": "github",
-      "owner": "moritamori",
+      "owner": "nakamula",
       "repo": "my-first-app",
       "releaseType": "release"
     },
