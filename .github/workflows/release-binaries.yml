@@ -37,7 +37,7 @@ jobs:
           certificatesha1: '${{ secrets.CERTHASH }}'
           certificatename: '${{ secrets.CERTNAME }}'
           folder: 'dist'
-          recursive: true
+          recursive: false
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
