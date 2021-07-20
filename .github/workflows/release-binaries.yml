@@ -30,7 +30,7 @@ jobs:
 
       - name: code signing with pfx on windows-latest
         if: runner.os == 'Windows'
-        uses: nakamula/code-sign-action@master
+        uses: nakamula/code-sign-action@v5
         with:
           certificate: '${{ secrets.CERTIFICATE }}'
           password: '${{ secrets.PASSWORD }}'
