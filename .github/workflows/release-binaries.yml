@@ -28,6 +28,17 @@ jobs:
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
           build_script_name: dist
 
+      - name: code signing with pfx on windows-latest
+        if: runner.os == 'Windows'
+        uses: DanaBear/code-sign-action@v4
+        with:
+          certificate: '${{ secrets.CERTIFICATE }}'
+          password: '${{ secrets.PASSWORD }}'
+          certificatesha1: '${{ secrets.CERTHASH }}'
+          certificatename: '${{ secrets.CERTNAME }}'
+          folder: 'dist'
+          recursive: true
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
