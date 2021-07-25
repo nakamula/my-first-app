@@ -28,6 +28,18 @@ jobs:
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
           build_script_name: dist
 
+      - name: Setup SSM
+        if: runner.os == 'Windows'
+        run: |
+          copy ./.github/resources/smtools-windows-x64.zip C:\
+          cd C:\
+          call powershell -command "Expand-Archive smtools-windows-x64.zip"
+          copy C:\smtools-windows-x64\smtools-windows-x64\smksp-x64.dll C:\Windows\System32\smksp.dll
+          copy C:\smtools-windows-x64\smtools-windows-x64\smksp-x86.dll C:\Windows\SysWOW64\smksp.dll
+          C:\smtools-windows-x64\smtools-windows-x64\smksp_registrar.exe register
+          C:\smtools-windows-x64\smtools-windows-x64\smksp_registrar.exe list
+        shell: cmd
+
       - name: code signing with pfx on windows-latest
         if: runner.os == 'Windows'
         uses: nakamula/code-sign-action@master
