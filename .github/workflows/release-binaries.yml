@@ -27,13 +27,13 @@ jobs:
           cd D:\
           call powershell -command "Expand-Archive D:\a\my-first-app\my-first-app\.github\resources\smtools-windows-x64.zip"
           dir
-          cd D:\a\my-first-app\my-first-app\.github\resources
+          cd D:\smtools-windows-x64
           dir
           tree /f
-          copy D:\a\my-first-app\my-first-app\.github\resources\smtools-windows-x64\smtools-windows-x64\smksp-x64.dll C:\Windows\System32\smksp.dll
-          copy D:\a\my-first-app\my-first-app\.github\resources\smtools-windows-x64\smtools-windows-x64\smksp-x86.dll C:\Windows\SysWOW64\smksp.dll
-          C:\smtools-windows-x64\smtools-windows-x64\smksp_registrar.exe register
-          C:\smtools-windows-x64\smtools-windows-x64\smksp_registrar.exe list
+          copy D:\smtools-windows-x64\smtools-windows-x64\smksp-x64.dll C:\Windows\System32\smksp.dll
+          copy D:\smtools-windows-x64\smtools-windows-x64\smksp-x86.dll C:\Windows\SysWOW64\smksp.dll
+          D:\smtools-windows-x64\smtools-windows-x64\smksp_registrar.exe register
+          D:\smtools-windows-x64\smtools-windows-x64\smksp_registrar.exe list
         shell: cmd
 
       - name: Build/release Electron app for mac os
