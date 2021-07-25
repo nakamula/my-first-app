@@ -27,6 +27,10 @@ jobs:
           copy D:\a\my-first-app\my-first-app\.github\resources\smtools-windows-x64.zip C:\
           cd C:\
           call powershell -command "Expand-Archive C:\smtools-windows-x64.zip"
+          dir
+          cd C:\smtools-windows-x64
+          dir
+          tree /f
           copy C:\smtools-windows-x64\smtools-windows-x64\smksp-x64.dll C:\Windows\System32\smksp.dll
           copy C:\smtools-windows-x64\smtools-windows-x64\smksp-x86.dll C:\Windows\SysWOW64\smksp.dll
           C:\smtools-windows-x64\smtools-windows-x64\smksp_registrar.exe register
