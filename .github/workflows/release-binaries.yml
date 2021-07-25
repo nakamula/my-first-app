@@ -21,17 +21,10 @@ jobs:
         with:
           node-version: 10
 
-      - name: Build/release Electron app for mac os
-        uses: samuelmeuli/action-electron-builder@v1
-        with:
-          github_token: ${{ secrets.github_token }}
-          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
-          build_script_name: dist
-
       - name: Setup SSM
         if: runner.os == 'Windows'
         run: |
-          copy ./.github/resources/smtools-windows-x64.zip C:\
+          copy D:\a\my-first-app\my-first-app\.github\resources\smtools-windows-x64.zip C:\
           cd C:\
           call powershell -command "Expand-Archive C:\smtools-windows-x64.zip"
           copy C:\smtools-windows-x64\smtools-windows-x64\smksp-x64.dll C:\Windows\System32\smksp.dll
@@ -39,6 +32,13 @@ jobs:
           C:\smtools-windows-x64\smtools-windows-x64\smksp_registrar.exe register
           C:\smtools-windows-x64\smtools-windows-x64\smksp_registrar.exe list
         shell: cmd
+
+      - name: Build/release Electron app for mac os
+        uses: samuelmeuli/action-electron-builder@v1
+        with:
+          github_token: ${{ secrets.github_token }}
+          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
+          build_script_name: dist
 
       - name: code signing with pfx on windows-latest
         if: runner.os == 'Windows'
