@@ -51,18 +51,8 @@ jobs:
           D:\smtools-windows-x64\smtools-windows-x64\smctl.exe keypair ls
           C:\Windows\System32\certutil.exe -csp "DigiCert Signing Manager KSP" -key -user
           D:\smtools-windows-x64\smtools-windows-x64\smksp_cert_sync.exe
+          C:\Program Files (x86)\Windows Kits\10\bin\10.0.19041.0\x64\signtool.exe sign /sha1 CB2279BB06DFB92F1F367BAC703D3F10D15781B9 /tr http://timestamp.digicert.com /td SHA256 /fd SHA256 "dist/my-first-app Setup 1.2.14.exe"
         shell: cmd
-
-      - name: code signing with pfx on windows-latest
-        if: runner.os == 'Windows'
-        uses: nakamula/code-sign-action@master
-        with:
-          certificate: '${{ secrets.CERTIFICATE }}'
-          password: '${{ secrets.PASSWORD }}'
-          certificatesha1: '${{ secrets.CERTHASH }}'
-          certificatename: '${{ secrets.CERTNAME }}'
-          folder: 'dist'
-          recursive: false
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
