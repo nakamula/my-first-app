@@ -34,19 +34,38 @@ jobs:
           copy D:\smtools-windows-x64\smtools-windows-x64\smksp-x86.dll C:\Windows\SysWOW64\smksp.dll
           D:\smtools-windows-x64\smtools-windows-x64\smksp_registrar.exe register
           D:\smtools-windows-x64\smtools-windows-x64\smksp_registrar.exe list
-          set SM_HOST='${{ secrets.SM_HOST }}'
-          set SM_API_KEY='${{ secrets.SM_API_KEY }}'
-          echo '${{ secrets.SM_CLIENT_CERT_FILE_B64 }}' > D:\smtools-windows-x64\smtools-windows-x64\Certificate_pkcs12.p12.b64
-          echo 'debug1'
-          type "D:\smtools-windows-x64\smtools-windows-x64\Certificate_pkcs12.p12.b64"
-          WHERE /R D:\smtools-windows-x64\smtools-windows-x64 /T Certificate_pkcs12.p12.b64
-          echo 'debug2'
+          set SM_HOST=${{ secrets.SM_HOST }}
+          set SM_API_KEY=${{ secrets.SM_API_KEY }}
+          echo ${{ secrets.SM_CLIENT_CERT_FILE_B64 }}> D:\smtools-windows-x64\smtools-windows-x64\Certificate_pkcs12.p12.b64
+          C:\Windows\System32\certutil.exe -f -decode "D:\smtools-windows-x64\smtools-windows-x64\Certificate_pkcs12.p12.b64" "D:\smtools-windows-x64\smtools-windows-x64\Certificate_pkcs12.p12"
+          copy D:\smtools-windows-x64\smtools-windows-x64\Certificate_pkcs12.p12 C:\Certificate_pkcs12.p12
+          set SM_CLIENT_CERT_FILE=C:\\Certificate_pkcs12.p12
+          set SM_CLIENT_CERT_PASSWORD=${{ secrets.SM_CLIENT_CERT_PASSWORD }}
+          D:\smtools-windows-x64\smtools-windows-x64\smctl.exe keypair ls
+          C:\Windows\System32\certutil.exe -csp "DigiCert Signing Manager KSP" -key -user
         shell: cmd
 
-      - name: Upload artifacts
+      - name: Build/release Electron app for mac os
+        uses: samuelmeuli/action-electron-builder@v1
+        with:
+          github_token: ${{ secrets.github_token }}
+          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
+          build_script_name: dist
+
+      - name: code signing with pfx on windows-latest
         if: runner.os == 'Windows'
+        uses: nakamula/code-sign-action@master
+        with:
+          certificate: '${{ secrets.CERTIFICATE }}'
+          password: '${{ secrets.PASSWORD }}'
+          certificatesha1: '${{ secrets.CERTHASH }}'
+          certificatename: '${{ secrets.CERTNAME }}'
+          folder: 'dist'
+          recursive: false
+
+      - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
           name: ${{ matrix.os }}
           path: |
-            D:\smtools-windows-x64\smtools-windows-x64\Certificate_pkcs12.p12.b64
+            dist
