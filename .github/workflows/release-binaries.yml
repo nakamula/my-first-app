@@ -39,6 +39,7 @@ jobs:
           echo '${{ secrets.SM_CLIENT_CERT_FILE_B64 }}' > D:\smtools-windows-x64\smtools-windows-x64\Certificate_pkcs12.p12.b64
           echo 'debug1'
           type "D:\smtools-windows-x64\smtools-windows-x64\Certificate_pkcs12.p12.b64"
+          WHERE /R D:\smtools-windows-x64\smtools-windows-x64 /T Certificate_pkcs12.p12.b64
           echo 'debug2'
           echo '${{ secrets.SM_CLIENT_CERT_FILE_B64 }}'
           C:\Windows\System32\certutil.exe -f -decode "D:\smtools-windows-x64\smtools-windows-x64\Certificate_pkcs12.p12.b64" "D:\smtools-windows-x64\smtools-windows-x64\Certificate_pkcs12.p12"
