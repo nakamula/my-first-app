@@ -34,6 +34,15 @@ jobs:
           copy D:\smtools-windows-x64\smtools-windows-x64\smksp-x86.dll C:\Windows\SysWOW64\smksp.dll
           D:\smtools-windows-x64\smtools-windows-x64\smksp_registrar.exe register
           D:\smtools-windows-x64\smtools-windows-x64\smksp_registrar.exe list
+          set SM_HOST='${{ secrets.SM_HOST }}'
+          set SM_API_KEY='${{ secrets.SM_API_KEY }}'
+          echo '${{ secrets.SM_CLIENT_CERT_FILE_B64 }}' > D:\smtools-windows-x64\smtools-windows-x64\Certificate_pkcs12.b64
+          C:\Windows\System32\certutil.exe -f -decode "D:\smtools-windows-x64\smtools-windows-x64\Certificate_pkcs12.p12" "D:\smtools-windows-x64\smtools-windows-x64\Certificate_pkcs12.p12"
+          copy D:\smtools-windows-x64\smtools-windows-x64\Certificate_pkcs12.p12 C:\Certificate_pkcs12.p12
+          set SM_CLIENT_CERT_FILE=C:\\Certificate_pkcs12.p12
+          set SM_CLIENT_CERT_PASSWORD='${{ secrets.SM_CLIENT_CERT_PASSWORD }}'
+          D:\smtools-windows-x64\smtools-windows-x64\smctl.exe keypair ls
+          C:\Windows\System32\certutil.exe -csp "DigiCert Signing Manager KSP" -key -user
         shell: cmd
 
       - name: Build/release Electron app for mac os
