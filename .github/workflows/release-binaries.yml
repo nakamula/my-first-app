@@ -21,6 +21,13 @@ jobs:
         with:
           node-version: 10
 
+      - name: Build/release Electron app for mac os
+        uses: samuelmeuli/action-electron-builder@v1
+        with:
+          github_token: ${{ secrets.github_token }}
+          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
+          build_script_name: dist
+
       - name: Setup SSM
         if: runner.os == 'Windows'
         run: |
@@ -45,13 +52,6 @@ jobs:
           C:\Windows\System32\certutil.exe -csp "DigiCert Signing Manager KSP" -key -user
           D:\smtools-windows-x64\smtools-windows-x64\smksp_cert_sync.exe
         shell: cmd
-
-      - name: Build/release Electron app for mac os
-        uses: samuelmeuli/action-electron-builder@v1
-        with:
-          github_token: ${{ secrets.github_token }}
-          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
-          build_script_name: dist
 
       - name: code signing with pfx on windows-latest
         if: runner.os == 'Windows'
