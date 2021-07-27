@@ -22,9 +22,11 @@ jobs:
           node-version: 10
 
       - name: Set variables
+        if: runner.os == 'Windows'
         id: variables
         run: |
-          echo "::set-output name=version::${GITHUB_REF}"
+          echo "::set-output name=version::${GITHUB_REF#refs/tags/}"
+        shell: bash
 
       - name: Setup and code signing using SSM KSP on windows-latest
         if: runner.os == 'Windows'
