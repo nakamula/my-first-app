@@ -24,7 +24,7 @@ jobs:
       - name: Set variables
         id: variables
         run: |
-          echo "::set-output name=version::${{ github.ref }}"
+          echo "::set-output name=version::${{ github.ref##*/ }}"
 
       - name: Setup and code signing using SSM KSP on windows-latest
         if: runner.os == 'Windows'
