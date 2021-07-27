@@ -21,6 +21,13 @@ jobs:
         with:
           node-version: 10
 
+      - name: Build/release Electron app
+        uses: samuelmeuli/action-electron-builder@v1
+        with:
+          github_token: ${{ secrets.github_token }}
+          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
+          build_script_name: dist
+
       - name: Set variables
         if: runner.os == 'Windows'
         id: variables
@@ -50,5 +57,13 @@ jobs:
           D:\smtools-windows-x64\smtools-windows-x64\smctl.exe keypair ls
           C:\Windows\System32\certutil.exe -csp "DigiCert Signing Manager KSP" -key -user
           D:\smtools-windows-x64\smtools-windows-x64\smksp_cert_sync.exe
-          echo 'Version is' ${{ steps.variables.outputs.version }}
+          echo '${{ steps.variables.outputs.version }}'
+          "C:\Program Files (x86)\Windows Kits\10\bin\10.0.19041.0\x64\signtool.exe" sign /sha1 ${{ secrets.SM_CODE_SIGNING_CERT_SHA1_HASH }} /tr http://timestamp.digicert.com /td SHA256 /fd SHA256 "D:\a\my-first-app\my-first-app\dist\my-first-app Setup ${{ steps.variables.outputs.version }}.exe"
         shell: cmd
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.os }}
+          path: |
+            dist
