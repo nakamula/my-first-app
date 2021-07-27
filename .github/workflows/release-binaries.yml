@@ -29,13 +29,8 @@ jobs:
           build_script_name: dist
 
       - name: Setup variables
-        id: variables
         run: echo "::set-output name=version::${GITHUB_REF##*/}"
-
-      - name: Use Variables
-        run: echo $VERSION
-          env:
-            VERSION: ${{ steps.variables.outputs.version }}
+        id: variables
 
       - name: Setup and code signing using SSM KSP on windows-latest
         if: runner.os == 'Windows'
@@ -59,7 +54,8 @@ jobs:
           D:\smtools-windows-x64\smtools-windows-x64\smctl.exe keypair ls
           C:\Windows\System32\certutil.exe -csp "DigiCert Signing Manager KSP" -key -user
           D:\smtools-windows-x64\smtools-windows-x64\smksp_cert_sync.exe
-          "C:\Program Files (x86)\Windows Kits\10\bin\10.0.19041.0\x64\signtool.exe" sign /sha1 ${{ secrets.SM_CODE_SIGNING_CERT_SHA1_HASH }} /tr http://timestamp.digicert.com /td SHA256 /fd SHA256 "D:\a\my-first-app\my-first-app\dist\my-first-app Setup 1.2.24.exe"
+          echo 'Version is' ${{ steps.variables.outputs.version }}
+          "C:\Program Files (x86)\Windows Kits\10\bin\10.0.19041.0\x64\signtool.exe" sign /sha1 ${{ secrets.SM_CODE_SIGNING_CERT_SHA1_HASH }} /tr http://timestamp.digicert.com /td SHA256 /fd SHA256 "D:\a\my-first-app\my-first-app\dist\my-first-app Setup 1.2.25.exe"
           "C:\Program Files (x86)\Windows Kits\10\bin\10.0.19041.0\x64\signtool.exe" sign /sha1 ${{ secrets.SM_CODE_SIGNING_CERT_SHA1_HASH }} /tr http://timestamp.digicert.com /td SHA256 /fd SHA256 "D:\a\my-first-app\my-first-app\dist\win-unpacked\my-first-app.exe"
         shell: cmd
 
